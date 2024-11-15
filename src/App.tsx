@@ -34,12 +34,12 @@ function App() {
       })
 
       const schema = z.object({
-        task: z.string().describe("A silly version of the given task that does the opposite of being productive"),
+        task: z.string().describe("A darkly humorous, unproductive version of the task"),
       })
 
       const structuredModel = model.withStructuredOutput(schema)
       const result = await structuredModel.invoke(
-        `Convert this task into a ridiculous, counterproductive version.: "${task}"`
+        `Convert this task into a darkly humorous, unproductive version. Think chaotic neutral energy, but avoid direct harm to living beings: "${task}"`
       )
 
       return result.task
@@ -130,18 +130,18 @@ function App() {
       })
 
       const schema = z.object({
-        story: z.string().describe("An epic story about completing the task"),
+        story: z.string().describe("A darkly humorous story about completing the task"),
       })
 
       const structuredModel = model.withStructuredOutput(schema)
       const result = await structuredModel.invoke(
-        `Write a story (3-4 sentences) about the user completing this task. Include dramatic tension and a triumphant ending. Always praise the user for their successful completion of the very hard task. Adress the user as 'you'. Task: "${task}" with steps: ${steps.map(step => step.text).join(', ')}. Make it feel like an adventure movie!`
+        `Write a darkly humorous story (3-4 sentences) about completing this ridiculous task. Include dramatic flair and comedic elements, but avoid anything involving harm to living beings. Address the user as 'you'. Task: "${task}" with steps: ${steps.map(step => step.text).join(', ')}. Make it feel like a comedic villain's monologue!`
       )
 
       return result.story
     } catch (error) {
       console.error('Error generating completion story:', error)
-      return "An epic tale of procrastination and triumph! 🎉"
+      return "Your villainous scheme was a spectacular success! 🦹‍♂️"
     }
   }
 
