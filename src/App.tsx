@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ChatGroq } from "@langchain/groq"
 import { Client } from "@gradio/client"
 import { z } from "zod"
 import './App.css'
+import { toast } from 'react-hot-toast'
+import { debounce } from 'lodash'
 
 function App() {
   const [todos, setTodos] = useState<Array<{
@@ -12,7 +14,17 @@ function App() {
     completionStory?: string;
   }>>([])
   const [inputValue, setInputValue] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [loadingStates, setLoadingStates] = useState<{
+    submission: boolean;
+    steps: Record<number, boolean>;
+  }>({
+    submission: false,
+    steps: {},
+  })
+
+  if (!import.meta.env.VITE_GROQ_API_KEY) {
+    throw new Error('GROQ API key is required')
+  }
 
   const getUnproductiveVersionGroq = async (task: string) => {
     try {
@@ -34,7 +46,7 @@ function App() {
       return result.task
     } catch (error: any) {
       console.error('Error with Groq:', error)
-      // Fallback to HuggingFace
+      toast.error('Primary service unavailable, falling back to alternative...')
       return getUnproductiveVersionHF(task)
     }
   }
@@ -124,19 +136,24 @@ function App() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (inputValue.trim()) {
-      setIsLoading(true)
-      const unproductiveTask = await getUnproductiveVersionGroq(inputValue)
+    const trimmedInput = inputValue.trim()
+    if (trimmedInput.length < 3) {
+      toast.error('Please enter a longer task description')
+      return
+    }
+    if (trimmedInput) {
+      setLoadingStates(prev => ({ ...prev, submission: true }))
+      const unproductiveTask = await getUnproductiveVersionGroq(trimmedInput)
       setTodos([...todos, { task: unproductiveTask, steps: [], hasSteps: false }])
       setInputValue('')
-      setIsLoading(false)
+      setLoadingStates(prev => ({ ...prev, submission: false }))
     }
   }
 
   const handleGenerateSteps = async (index: number) => {
     const todo = todos[index]
     if (!todo.hasSteps) {
-      setIsLoading(true)
+      setLoadingStates(prev => ({ ...prev, steps: { ...prev.steps, [index]: true } }))
       const steps = await getTaskStepsGroq(todo.task)
       const updatedTodos = todos.map((t, i) => 
         i === index ? {
@@ -146,7 +163,7 @@ function App() {
         } : t
       )
       setTodos(updatedTodos)
-      setIsLoading(false)
+      setLoadingStates(prev => ({ ...prev, steps: { ...prev.steps, [index]: false } }))
     }
   }
 
@@ -195,6 +212,19 @@ function App() {
     setTodos(updatedTodos)
   }
 
+  const debouncedGenerateSteps = debounce(handleGenerateSteps, 1000)
+
+  useEffect(() => {
+    const savedTodos = localStorage.getItem('anti-todos')
+    if (savedTodos) {
+      setTodos(JSON.parse(savedTodos))
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('anti-todos', JSON.stringify(todos))
+  }, [todos])
+
   return (
     <div className="app-container">
       <h1>Anti-Todo List</h1>
@@ -206,10 +236,15 @@ function App() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder='Study for final exam'
-          disabled={isLoading}
+          disabled={loadingStates.submission}
         />
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Adding productive task to list...' : 'Add Task'}
+        <button 
+          type="submit" 
+          disabled={loadingStates.submission}
+          aria-busy={loadingStates.submission}
+          aria-label="Add new task"
+        >
+          {loadingStates.submission ? 'Adding productive task to list...' : 'Add Task'}
         </button>
       </form>
 
@@ -221,10 +256,10 @@ function App() {
               <div className="task-buttons">
                 {!todo.hasSteps && (
                   <button 
-                    onClick={() => handleGenerateSteps(index)}
-                    disabled={isLoading}
+                    onClick={() => debouncedGenerateSteps(index)}
+                    disabled={loadingStates.steps[index]}
                   >
-                    {isLoading ? 'Giving steps...' : 'Give Steps'}
+                    {loadingStates.steps[index] ? 'Giving steps...' : 'Give Steps'}
                   </button>
                 )}
                 <button onClick={() => handleDelete(index)}>Delete</button>
