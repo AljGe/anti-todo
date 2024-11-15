@@ -31,6 +31,8 @@ jobs:
         run: pnpm install
 
       - name: Build
+        env:
+          VITE_GROQ_API_KEY: ${{ secrets.VITE_GROQ_API_KEY }}
         run: pnpm run build
 
       - name: Setup Pages

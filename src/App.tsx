@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { ChatGroq } from "@langchain/groq"
 import { Client } from "@gradio/client"
+import { z } from "zod"
 import './App.css'
 
 function App() {
@@ -7,7 +9,32 @@ function App() {
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const getUnproductiveVersion = async (task: string) => {
+  const getUnproductiveVersionGroq = async (task: string) => {
+    try {
+      const model = new ChatGroq({
+        apiKey: import.meta.env.VITE_GROQ_API_KEY,
+        model: "mixtral-8x7b-32768",
+        temperature: 0.8,
+      })
+
+      const schema = z.object({
+        task: z.string().describe("The silly, unproductive version of the input task"),
+      })
+
+      const structuredModel = model.withStructuredOutput(schema)
+      const result = await structuredModel.invoke(
+        `Convert this task to its opposite, silly and unproductive version: "${task}"`
+      )
+
+      return result.task
+    } catch (error: any) {
+      console.error('Error with Groq:', error)
+      // Fallback to HuggingFace
+      return getUnproductiveVersionHF(task)
+    }
+  }
+
+  const getUnproductiveVersionHF = async (task: string) => {
     try {
       const client = await Client.connect("huggingface-projects/llama-2-13b-chat")
       const result = await client.predict("/chat", {
@@ -21,15 +48,37 @@ function App() {
       })
       return result.data as string
     } catch (error: any) {
-      console.error('Error generating task:', error)
-      if (error?.message?.includes('exceeded your GPU quota')) {
-        return 'The Tasker is taking a break! Please wait an hour before trying again.'
-      }
+      console.error('Error with HuggingFace:', error)
       return 'Failed to generate anti-task. Please try again later.'
     }
   }
 
-  const getTaskSteps = async (task: string) => {
+  const getTaskStepsGroq = async (task: string) => {
+    try {
+      const model = new ChatGroq({
+        apiKey: import.meta.env.VITE_GROQ_API_KEY,
+        model: "mixtral-8x7b-32768",
+        temperature: 0.8,
+      })
+
+      const schema = z.object({
+        steps: z.array(z.string()).describe("Three silly steps to accomplish the task"),
+      })
+
+      const structuredModel = model.withStructuredOutput(schema)
+      const result = await structuredModel.invoke(
+        `Break down this silly task into exactly 3 steps: "${task}". Be creative and humorous.`
+      )
+
+      return result.steps
+    } catch (error: any) {
+      console.error('Error with Groq:', error)
+      // Fallback to HuggingFace
+      return getTaskStepsHF(task)
+    }
+  }
+
+  const getTaskStepsHF = async (task: string) => {
     try {
       const client = await Client.connect("huggingface-projects/llama-2-13b-chat")
       const result = await client.predict("/chat", {
@@ -47,10 +96,7 @@ function App() {
         .filter(step => step.trim())
       return steps
     } catch (error: any) {
-      console.error('Error giving steps:', error)
-      if (error?.message?.includes('exceeded your GPU quota')) {
-        return ['The Tasker is taking a break! Please wait a few minutes or up to one hour before trying again.']
-      }
+      console.error('Error with HuggingFace:', error)
       return ['Failed to give steps']
     }
   }
@@ -59,7 +105,7 @@ function App() {
     e.preventDefault()
     if (inputValue.trim()) {
       setIsLoading(true)
-      const unproductiveTask = await getUnproductiveVersion(inputValue)
+      const unproductiveTask = await getUnproductiveVersionGroq(inputValue)
       setTodos([...todos, { task: unproductiveTask, steps: [], hasSteps: false }])
       setInputValue('')
       setIsLoading(false)
@@ -70,7 +116,7 @@ function App() {
     const todo = todos[index]
     if (!todo.hasSteps) {
       setIsLoading(true)
-      const steps = await getTaskSteps(todo.task)
+      const steps = await getTaskStepsGroq(todo.task)
       const updatedTodos = todos.map((t, i) => 
         i === index ? { ...t, steps, hasSteps: true } : t
       )

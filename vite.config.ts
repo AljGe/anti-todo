@@ -12,9 +12,6 @@ export default defineConfig({
         global: true,
         process: true,
       },
-      overrides: {
-        fs: 'node:fs'
-      }
     }),
   ],
   base: '/anti-todo/',
@@ -23,10 +20,23 @@ export default defineConfig({
       define: {
         global: 'globalThis'
       }
-    }
+    },
+    exclude: ['@gradio/client']
   },
   define: {
     'process.env': {},
     global: 'globalThis',
   },
+  build: {
+    outDir: 'dist',
+    commonjsOptions: {
+      transformMixedEsModules: true
+    }
+  },
+  resolve: {
+    alias: {
+      'node:fs': 'browserify-fs',
+      'node:path': 'path-browserify'
+    }
+  }
 })
