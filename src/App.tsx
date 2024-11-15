@@ -33,16 +33,17 @@ function App() {
         temperature: 0.8,
       })
 
-      const schema = z.object({
-        task: z.string().describe("A darkly humorous, unproductive version of the task"),
-      })
-
-      const structuredModel = model.withStructuredOutput(schema)
-      const result = await structuredModel.invoke(
+      const response = await model.invoke(
         `Convert this task into a darkly humorous, unproductive version. Think chaotic neutral energy, but avoid direct harm to living beings: "${task}"`
       )
 
-      return result.task
+      const content = typeof response.content === 'string' 
+        ? response.content 
+        : Array.isArray(response.content) 
+          ? response.content.map(item => typeof item === 'string' ? item : item.text).join('')
+          : ''
+
+      return content.trim()
     } catch (error: any) {
       console.error('Error with Groq:', error)
       toast.error('Failed to generate anti-task. Please try again.')
@@ -129,16 +130,17 @@ function App() {
         temperature: 0.8,
       })
 
-      const schema = z.object({
-        story: z.string().describe("A darkly humorous story about completing the task"),
-      })
-
-      const structuredModel = model.withStructuredOutput(schema)
-      const result = await structuredModel.invoke(
+      const response = await model.invoke(
         `Write a darkly humorous story (3-4 sentences) about completing this ridiculous task. Include dramatic flair and comedic elements, but avoid anything involving harm to living beings. Address the user as 'you'. Task: "${task}" with steps: ${steps.map(step => step.text).join(', ')}. Make it feel like a comedic villain's monologue!`
       )
 
-      return result.story
+      const content = typeof response.content === 'string' 
+        ? response.content 
+        : Array.isArray(response.content) 
+          ? response.content.map(item => typeof item === 'string' ? item : item.text).join('')
+          : ''
+
+      return content.trim()
     } catch (error) {
       console.error('Error generating completion story:', error)
       return "Your villainous scheme was a spectacular success! 🦹‍♂️"
