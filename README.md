@@ -6,9 +6,9 @@ A React application that works *exactly* like a traditional todo lists app, but 
 
 ## About
 
-Anti-Todo List helps you manage your tasks with a unique approach. Instead of focusing on what needs to be done, this app offers a fresh perspective on task management.
+Anti-Todo List helps you manage your tasks.
 
-> **Note:** The tasker service behind this application may occasionally be tired and need rest. If you encounter any delays, please wait for approximately one hour before trying again.
+> **Note:** The humans beings behind this application may occasionally be tired and need rest. If you encounter any delays, please wait for approximately one second before trying again.
 
 ## Getting Started on your local machine
 
@@ -24,7 +24,8 @@ pnpm run dev
 
 - React + TypeScript - For building the user interface
 - Vite - Next generation frontend tooling
-- Gradio Client - API integration
+- Groq AI - For generating tasks
+- Local Storage - For persisting your tasks
 
 ## Contributing
 
