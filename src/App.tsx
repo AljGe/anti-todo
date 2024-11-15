@@ -5,7 +5,12 @@ import { z } from "zod"
 import './App.css'
 
 function App() {
-  const [todos, setTodos] = useState<Array<{ task: string; steps: string[]; hasSteps: boolean }>>([])
+  const [todos, setTodos] = useState<Array<{
+    task: string;
+    steps: Array<{ text: string; completed: boolean }>;
+    hasSteps: boolean;
+    completionStory?: string;
+  }>>([])
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -118,7 +123,11 @@ function App() {
       setIsLoading(true)
       const steps = await getTaskStepsGroq(todo.task)
       const updatedTodos = todos.map((t, i) => 
-        i === index ? { ...t, steps, hasSteps: true } : t
+        i === index ? {
+          ...t,
+          steps: steps.map(step => ({ text: step, completed: false })),
+          hasSteps: true
+        } : t
       )
       setTodos(updatedTodos)
       setIsLoading(false)
@@ -127,6 +136,47 @@ function App() {
 
   const handleDelete = (index: number) => {
     setTodos(todos.filter((_, i) => i !== index))
+  }
+
+  const generateCompletionStory = async (task: string) => {
+    try {
+      const model = new ChatGroq({
+        apiKey: import.meta.env.VITE_GROQ_API_KEY,
+        model: "mixtral-8x7b-32768",
+        temperature: 0.8,
+      })
+
+      const schema = z.object({
+        story: z.string().describe("A funny, short story about completing the silly task"),
+      })
+
+      const structuredModel = model.withStructuredOutput(schema)
+      const result = await structuredModel.invoke(
+        `Write a short, funny story (2-3 sentences) about someone completing this silly task: "${task}"`
+      )
+
+      return result.story
+    } catch (error) {
+      console.error('Error generating completion story:', error)
+      return "Task completed with style! 🎉"
+    }
+  }
+
+  const handleStepComplete = async (todoIndex: number, stepIndex: number) => {
+    const updatedTodos = [...todos]
+    const todo = updatedTodos[todoIndex]
+    todo.steps[stepIndex].completed = !todo.steps[stepIndex].completed
+
+    // Check if all steps are completed
+    const allCompleted = todo.steps.every(step => step.completed)
+    if (allCompleted && !todo.completionStory) {
+      const story = await generateCompletionStory(todo.task)
+      todo.completionStory = story
+    } else if (!allCompleted) {
+      todo.completionStory = undefined
+    }
+
+    setTodos(updatedTodos)
   }
 
   return (
@@ -167,8 +217,23 @@ function App() {
             {todo.hasSteps && (
               <ul className="task-steps">
                 {todo.steps.map((step, stepIndex) => (
-                  <li key={stepIndex}>{step}</li>
+                  <li key={stepIndex} className="step-item">
+                    <input
+                      type="checkbox"
+                      className="step-checkbox"
+                      checked={step.completed}
+                      onChange={() => handleStepComplete(index, stepIndex)}
+                    />
+                    <span className={`step-text ${step.completed ? 'completed' : ''}`}>
+                      {step.text}
+                    </span>
+                  </li>
                 ))}
+                {todo.completionStory && (
+                  <div className="completion-story">
+                    {todo.completionStory}
+                  </div>
+                )}
               </ul>
             )}
           </li>

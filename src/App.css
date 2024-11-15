@@ -127,6 +127,7 @@ button:hover {
   width: 100%;
   padding: 1rem;
   border-bottom: 1px solid #333;
+  border-radius: 8px 8px 0 0;
 }
 
 .task-buttons {
@@ -191,4 +192,70 @@ button:disabled {
 
 button:disabled:hover {
   background-color: #4a4a4a;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.step-checkbox {
+  width: 1.2rem;
+  height: 1.2rem;
+  appearance: none;
+  border: 2px solid #646cff;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.step-checkbox:checked {
+  background-color: #646cff;
+}
+
+.step-checkbox:checked::after {
+  content: "✓";
+  position: absolute;
+  color: white;
+  font-size: 0.8rem;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.step-text {
+  transition: all 0.3s;
+}
+
+.step-text.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.completion-story {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #242424;
+  border-radius: 4px;
+  color: #646cff;
+  font-style: italic;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.task-completed {
+  animation: taskComplete 0.5s ease-in;
+  border-color: #646cff;
+}
+
+@keyframes taskComplete {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
