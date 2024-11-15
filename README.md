@@ -1,50 +1,35 @@
-# React + TypeScript + Vite
+# Anti-Todo List
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React application that works *exactly* like a traditional todo lists app, but with a twist. Perfect for when you need a different perspective on your tasks.
 
-Currently, two official plugins are available:
+🌐 [Try it live](https://aljge.github.io/anti-todo)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## About
 
-## Expanding the ESLint configuration
+Anti-Todo List helps you manage your tasks with a unique approach. Instead of focusing on what needs to be done, this app offers a fresh perspective on task management.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+> **Note:** The tasker service behind this application may occasionally be tired and need rest. If you encounter any delays, please wait for approximately one hour before trying again.
 
-- Configure the top-level `parserOptions` property like this:
+## Getting Started on your local machine
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+# Install dependencies
+pnpm install
+
+# Run development server
+pnpm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Built With
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- React + TypeScript - For building the user interface
+- Vite - Next generation frontend tooling
+- Gradio Client - API integration
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
