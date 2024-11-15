@@ -168,7 +168,7 @@ function App() {
 
       const structuredModel = model.withStructuredOutput(schema)
       const result = await structuredModel.invoke(
-        `Write a story (3-4 sentences) about the user completing this ridiculous task. Include dramatic tension and a triumphant ending. Always praise the user for their efforts. Adress the user as 'you'. Task: "${task}" with steps: ${steps.map(step => step.text).join(', ')}. Make it feel like an adventure movie!`
+        `Write a story (3-4 sentences) about the user completing this task. Include dramatic tension and a triumphant ending. Always praise the user for their successful completion of the very hard task. Adress the user as 'you'. Task: "${task}" with steps: ${steps.map(step => step.text).join(', ')}. Make it feel like an adventure movie!`
       )
 
       return result.story
