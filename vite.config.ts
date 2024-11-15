@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
     nodePolyfills({
-      include: ['fs', 'fs/promises', 'path', 'stream', 'zlib', 'crypto', 'http', 'https', 'buffer', 'events', 'os', 'net', 'tls', 'url'],
+      include: ['fs', 'path', 'stream', 'zlib', 'crypto', 'http', 'https', 'buffer', 'events', 'os', 'net', 'tls', 'url'],
       globals: {
         Buffer: true,
         global: true,
