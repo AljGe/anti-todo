@@ -19,16 +19,16 @@ function App() {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
         model: "llama-3.1-70b-versatile",
-        temperature: 0.9,
+        temperature: 0.8,
       })
 
       const schema = z.object({
-        task: z.string().describe("A silly version of the input task that does the opposite of being productive"),
+        task: z.string().describe("A silly version of the given task that does the opposite of being productive"),
       })
 
       const structuredModel = model.withStructuredOutput(schema)
       const result = await structuredModel.invoke(
-        `Convert this productive task into a ridiculous, counterproductive version: "${task}"`
+        `Convert this task into a ridiculous, counterproductive version.: "${task}"`
       )
 
       return result.task
