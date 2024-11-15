@@ -66,19 +66,18 @@ function App() {
         temperature: 0.8,
       })
 
-      const schema = z.object({
-        steps: z.array(z.string()).describe("Three silly steps to accomplish the task"),
-      })
-
-      const structuredModel = model.withStructuredOutput(schema)
-      const result = await structuredModel.invoke(
-        `Break down this silly task into exactly 3 steps: "${task}". Be creative and humorous.`
+      const response = await model.invoke(
+        `Generate exactly 3 silly steps for this task: "${task}". Format each step as a simple sentence.`
       )
-
-      return result.steps
+      
+      const steps = response.content
+        .split('\n')
+        .filter(step => step.trim())
+        .slice(0, 3)
+      
+      return steps
     } catch (error: any) {
       console.error('Error with Groq:', error)
-      // Fallback to HuggingFace
       return getTaskStepsHF(task)
     }
   }
@@ -88,21 +87,28 @@ function App() {
       const client = await Client.connect("huggingface-projects/llama-2-13b-chat")
       const result = await client.predict("/chat", {
         message: `Break down this silly task into 3 steps: "${task}"`,
-        system_prompt: "You break down silly tasks into even sillier steps. Be creative and humorous. Example:\nTask: 'Memorize all Netflix show intros'\nSteps:\n1. Create a dance routine for each streaming platform's logo animation\n2. Practice saying 'Netflix and actually chill' in different languages\n3. Build a fort using only remote controls\nOutput ONLY the numbered steps without any additional text.",
+        system_prompt: "You break down silly tasks into exactly 3 silly steps. Be creative and humorous. Respond with exactly 3 numbered steps.",
         max_new_tokens: 100,
         temperature: 0.8,
         top_p: 0.9,
         top_k: 50,
         repetition_penalty: 1.2,
       })
-      const steps = (result.data as string)
+
+      if (!result || typeof result.data !== 'string') {
+        throw new Error('Invalid response format from HuggingFace')
+      }
+
+      const steps = result.data
         .split('\n')
         .map(step => step.replace(/^\d+\.\s*/, ''))
         .filter(step => step.trim())
-      return steps
+        .slice(0, 3)
+
+      return steps.length === 3 ? steps : ['Step 1', 'Step 2', 'Step 3']
     } catch (error: any) {
       console.error('Error with HuggingFace:', error)
-      return ['Failed to give steps']
+      return ['Step 1', 'Step 2', 'Step 3']
     }
   }
 
