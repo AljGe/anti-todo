@@ -19,16 +19,16 @@ function App() {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
         model: "llama3-8b-8192",
-        temperature: 0.8,
+        temperature: 0.9,
       })
 
       const schema = z.object({
-        task: z.string().describe("The silly, unproductive version of the input task"),
+        task: z.string().describe("A ridiculously specific, silly version of the input task that does the opposite of being productive"),
       })
 
       const structuredModel = model.withStructuredOutput(schema)
       const result = await structuredModel.invoke(
-        `Convert this task to its opposite, silly and unproductive version: "${task}"`
+        `Convert this productive task into its most ridiculous, counterproductive version. Be very specific and include silly details: "${task}"`
       )
 
       return result.task
@@ -63,11 +63,11 @@ function App() {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
         model: "gemma-7b-it",
-        temperature: 0.8,
+        temperature: 0.9,
       })
 
       const response = await model.invoke(
-        `Generate exactly 3 silly steps for this task: "${task}". Format each step as a simple sentence.`
+        `Generate exactly 3 absurd, highly detailed steps for this silly task: "${task}". Each step should be increasingly ridiculous and include specific, humorous details. Make each step a complete sentence with unexpected twists.`
       )
       
       const content = typeof response.content === 'string' 
@@ -159,22 +159,22 @@ function App() {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
         model: "gemma2-9b-it",
-        temperature: 0.8,
+        temperature: 0.9,
       })
 
       const schema = z.object({
-        story: z.string().describe("A funny, short story about completing the silly task"),
+        story: z.string().describe("An epic, over-the-top story about completing the silly task"),
       })
 
       const structuredModel = model.withStructuredOutput(schema)
       const result = await structuredModel.invoke(
-        `Write a short, funny story (2-3 sentences) about the user completing this silly task: "${task}" with the following steps: ${steps.map(step => step.text).join(', ')}`
+        `Write an epic, dramatic story (3-4 sentences) about completing this ridiculous task. Include unexpected plot twists, dramatic tension, and a triumphant ending. Task: "${task}" with steps: ${steps.map(step => step.text).join(', ')}. Make it feel like an adventure movie!`
       )
 
       return result.story
     } catch (error) {
       console.error('Error generating completion story:', error)
-      return "Task completed with style! 🎉"
+      return "An epic tale of procrastination and triumph! 🎉"
     }
   }
 
