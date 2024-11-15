@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { ChatGroq } from "@langchain/groq"
-import { z } from "zod"
 import './App.css'
 import { toast } from 'react-hot-toast'
 import { debounce } from 'lodash'
@@ -40,7 +39,7 @@ function App() {
       const content = typeof response.content === 'string' 
         ? response.content 
         : Array.isArray(response.content) 
-          ? response.content.map(item => typeof item === 'string' ? item : item.text).join('')
+          ? response.content.map(item => typeof item === 'string' ? item : JSON.stringify(item)).join('')
           : ''
 
       return content.trim()
@@ -68,8 +67,7 @@ function App() {
         : Array.isArray(response.content) 
           ? response.content.map(item => {
               if (typeof item === 'string') return item;
-              if ('text' in item) return item.text;
-              return '';
+              return JSON.stringify(item);
             }).join('\n')
           : '';
       
