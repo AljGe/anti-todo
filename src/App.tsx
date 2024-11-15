@@ -70,9 +70,15 @@ function App() {
         `Generate exactly 3 silly steps for this task: "${task}". Format each step as a simple sentence.`
       )
       
-      const steps = response.content
+      const content = typeof response.content === 'string' 
+        ? response.content 
+        : Array.isArray(response.content) 
+          ? response.content.map(c => c.text || '').join('\n')
+          : '';
+      
+      const steps = content
         .split('\n')
-        .filter(step => step.trim())
+        .filter((step: string) => step.trim())
         .slice(0, 3)
       
       return steps
@@ -101,8 +107,8 @@ function App() {
 
       const steps = result.data
         .split('\n')
-        .map(step => step.replace(/^\d+\.\s*/, ''))
-        .filter(step => step.trim())
+        .map((step: string) => step.replace(/^\d+\.\s*/, ''))
+        .filter((step: string) => step.trim())
         .slice(0, 3)
 
       return steps.length === 3 ? steps : ['Step 1', 'Step 2', 'Step 3']
