@@ -59,7 +59,7 @@ function App() {
       })
 
       const response = await model.invoke(
-        `Generate exactly 3 detailed steps for this task: "${task}". Each step should be a little bit weird. Make each step a complete sentence.`
+        `Generate exactly 3 steps for this task: "${task}". Each step should be a little bit weird. Make each step a complete sentence.`
       )
       
       const content = typeof response.content === 'string' 
