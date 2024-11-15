@@ -33,7 +33,7 @@ function App() {
       })
 
       const response = await model.invoke(
-        `Convert this task into a short, unproductive version (max 15 words). Avoid harm to living beings: "${task}"`
+        `Convert this task into a short, unproductive version - basically a reverse of the task (max 6 words). Avoid harm to living beings: "${task}"`
       )
 
       const content = typeof response.content === 'string' 
