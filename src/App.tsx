@@ -159,7 +159,7 @@ function App() {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
         model: "gemma2-9b-it",
-        temperature: 0.9,
+        temperature: 0.8,
       })
 
       const schema = z.object({
