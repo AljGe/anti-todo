@@ -1,0 +1,147 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+#root {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.app-container {
+  background-color: #1a1a1a;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+  color: #646cff;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #888;
+  font-style: italic;
+  margin-bottom: 2rem;
+}
+
+.todo-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.todo-form input {
+  flex: 1;
+  padding: 0.8rem;
+  border: 1px solid #646cff;
+  border-radius: 4px;
+  background-color: #242424;
+  color: white;
+}
+
+.todo-form input::placeholder {
+  color: #888;
+}
+
+button {
+  background-color: #646cff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #747bff;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #242424;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #ff4646;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+}
+
+.delete-btn:hover {
+  background-color: #ff5e5e;
+}
+.task-steps {
+  list-style-type: decimal;
+  margin: 10px 0 0 20px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.task-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.task-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.task-buttons button {
+  padding: 4px 8px;
+  font-size: 0.9em;
+}
