@@ -73,7 +73,11 @@ function App() {
       const content = typeof response.content === 'string' 
         ? response.content 
         : Array.isArray(response.content) 
-          ? response.content.map(c => c.text || '').join('\n')
+          ? response.content.map(item => {
+              if (typeof item === 'string') return item;
+              if ('text' in item) return item.text;
+              return '';
+            }).join('\n')
           : '';
       
       const steps = content
