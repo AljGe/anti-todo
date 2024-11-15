@@ -34,7 +34,7 @@ function App() {
       })
 
       const response = await model.invoke(
-        `Convert this task into a darkly humorous, unproductive version. Think chaotic neutral energy, but avoid direct harm to living beings: "${task}"`
+        `Convert this task into a unproductive version. But avoid harm to living beings: "${task}"`
       )
 
       const content = typeof response.content === 'string' 
@@ -56,7 +56,7 @@ function App() {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
         model: "mixtral-8x7b-32768",
-        temperature: 0.9,
+        temperature: 0.75,
       })
 
       const response = await model.invoke(
