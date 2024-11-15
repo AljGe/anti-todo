@@ -18,7 +18,7 @@ function App() {
     try {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
-        model: "mixtral-8x7b-32768",
+        model: "llama3-8b-8192",
         temperature: 0.8,
       })
 
@@ -62,7 +62,7 @@ function App() {
     try {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
-        model: "mixtral-8x7b-32768",
+        model: "gemma-7b-it",
         temperature: 0.8,
       })
 
@@ -142,7 +142,7 @@ function App() {
     try {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
-        model: "mixtral-8x7b-32768",
+        model: "gemma2-9b-it",
         temperature: 0.8,
       })
 
@@ -152,7 +152,7 @@ function App() {
 
       const structuredModel = model.withStructuredOutput(schema)
       const result = await structuredModel.invoke(
-        `Write a short, funny story (2-3 sentences) about someone completing this silly task: "${task}"`
+        `Write a short, funny story (2-3 sentences) about the user completing this silly task: "${task}" with the following steps: ${steps.join(', ')}`
       )
 
       return result.story
