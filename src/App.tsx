@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { ChatGroq } from "@langchain/groq"
-import { Client } from "@gradio/client"
 import { z } from "zod"
 import './App.css'
 import { toast } from 'react-hot-toast'
@@ -30,7 +29,7 @@ function App() {
     try {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
-        model: "llama-3.1-70b-versatile",
+        model: "llama3-70b-8192",
         temperature: 0.8,
       })
 
@@ -46,26 +45,7 @@ function App() {
       return result.task
     } catch (error: any) {
       console.error('Error with Groq:', error)
-      toast.error('Primary service unavailable, falling back to alternative...')
-      return getUnproductiveVersionHF(task)
-    }
-  }
-
-  const getUnproductiveVersionHF = async (task: string) => {
-    try {
-      const client = await Client.connect("huggingface-projects/llama-2-13b-chat")
-      const result = await client.predict("/chat", {
-        message: `Convert to anti-task: "${task}"`,
-        system_prompt: "You convert tasks to their opposite, silly and unproductive versions. Respond ONLY with the converted task, without any additional text or explanations. Example:\nInput: 'Study for math test'\nOutput: 'Calculate how many pizza slices you can eat in one sitting'",
-        max_new_tokens: 20,
-        temperature: 0.8,
-        top_p: 0.9,
-        top_k: 50,
-        repetition_penalty: 1.2,
-      })
-      return result.data as string
-    } catch (error: any) {
-      console.error('Error with HuggingFace:', error)
+      toast.error('Failed to generate anti-task. Please try again.')
       return 'Failed to generate anti-task. Please try again later.'
     }
   }
@@ -100,37 +80,7 @@ function App() {
       return steps
     } catch (error: any) {
       console.error('Error with Groq:', error)
-      return getTaskStepsHF(task)
-    }
-  }
-
-  const getTaskStepsHF = async (task: string) => {
-    try {
-      const client = await Client.connect("huggingface-projects/llama-2-13b-chat")
-      const result = await client.predict("/chat", {
-        message: `Break down this silly task into 3 steps: "${task}"`,
-        system_prompt: "You break down silly tasks into exactly 3 silly steps. Be creative and humorous. Respond with exactly 3 numbered steps.",
-        max_new_tokens: 100,
-        temperature: 0.8,
-        top_p: 0.9,
-        top_k: 50,
-        repetition_penalty: 1.2,
-      })
-
-      if (!result || typeof result.data !== 'string') {
-        throw new Error('Invalid response format from HuggingFace')
-      }
-
-      const steps = result.data
-        .split('\n')
-        .map((step: string) => step.replace(/^\d+\.\s*/, ''))
-        .filter((step: string) => step.trim())
-        .slice(0, 3)
-
-      return steps.length === 3 ? steps : ['Step 1', 'Step 2', 'Step 3']
-    } catch (error: any) {
-      console.error('Error with HuggingFace:', error)
-      return ['Step 1', 'Step 2', 'Step 3']
+      return ['Failed to generate steps. Please try again.', 'Step 2', 'Step 3']
     }
   }
 
