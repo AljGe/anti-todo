@@ -23,7 +23,7 @@ function App() {
     } catch (error: any) {
       console.error('Error generating task:', error)
       if (error?.message?.includes('exceeded your GPU quota')) {
-        return 'The AI is taking a break! Please wait a minute before trying again.'
+        return 'The Tasker is taking a break! Please wait a minute before trying again.'
       }
       return 'Failed to generate anti-task. Please try again later.'
     }
@@ -49,7 +49,7 @@ function App() {
     } catch (error: any) {
       console.error('Error giving steps:', error)
       if (error?.message?.includes('exceeded your GPU quota')) {
-        return ['The AI is taking a break! Please wait a few minutes or up to one hour before trying again.']
+        return ['The Tasker is taking a break! Please wait a few minutes or up to one hour before trying again.']
       }
       return ['Failed to give steps']
     }
