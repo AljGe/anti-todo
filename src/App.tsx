@@ -12,7 +12,7 @@ function App() {
       const client = await Client.connect("huggingface-projects/llama-2-13b-chat")
       const result = await client.predict("/chat", {
         message: `Convert to anti-task: "${task}"`,
-        system_prompt: "You convert tasks to their opposite, silly and unproductive versions...",
+        system_prompt: "You convert tasks to their opposite, silly and unproductive versions. Respond ONLY with the converted task, without any additional text or explanations. Example:\nInput: 'Study for math test'\nOutput: 'Calculate how many pizza slices you can eat in one sitting'",
         max_new_tokens: 20,
         temperature: 0.8,
         top_p: 0.9,
