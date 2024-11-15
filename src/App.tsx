@@ -18,7 +18,7 @@ function App() {
     try {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
-        model: "llama3-8b-8192",
+        model: "llama-3.1-70b-versatile",
         temperature: 0.9,
       })
 
@@ -62,7 +62,7 @@ function App() {
     try {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
-        model: "gemma-7b-it",
+        model: "mixtral-8x7b-32768",
         temperature: 0.9,
       })
 
@@ -158,12 +158,12 @@ function App() {
     try {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
-        model: "gemma2-9b-it",
+        model: "llama3-70b-8192",
         temperature: 0.8,
       })
 
       const schema = z.object({
-        story: z.string().describe("An epic, over-the-top story about completing the silly task"),
+        story: z.string().describe("An epic story about completing the task"),
       })
 
       const structuredModel = model.withStructuredOutput(schema)
