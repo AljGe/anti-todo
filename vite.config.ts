@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
     nodePolyfills({
-      include: ['fs', 'path', 'stream', 'zlib', 'crypto', 'http', 'https', 'buffer', 'events', 'os', 'net', 'tls', 'url'],
+      include: ['path', 'stream', 'util', 'buffer', 'process'],
       globals: {
         Buffer: true,
         global: true,
@@ -20,8 +20,7 @@ export default defineConfig({
       define: {
         global: 'globalThis'
       }
-    },
-    exclude: ['@gradio/client']
+    }
   },
   define: {
     'process.env': {},
