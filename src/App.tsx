@@ -23,12 +23,12 @@ function App() {
       })
 
       const schema = z.object({
-        task: z.string().describe("A ridiculously specific, silly version of the input task that does the opposite of being productive"),
+        task: z.string().describe("A silly version of the input task that does the opposite of being productive"),
       })
 
       const structuredModel = model.withStructuredOutput(schema)
       const result = await structuredModel.invoke(
-        `Convert this productive task into its most ridiculous, counterproductive version. Be very specific and include silly details: "${task}"`
+        `Convert this productive task into a ridiculous, counterproductive version: "${task}"`
       )
 
       return result.task
@@ -67,7 +67,7 @@ function App() {
       })
 
       const response = await model.invoke(
-        `Generate exactly 3 absurd, highly detailed steps for this silly task: "${task}". Each step should be increasingly ridiculous and include specific, humorous details. Make each step a complete sentence with unexpected twists.`
+        `Generate exactly 3 detailed steps for this task: "${task}". Each step should be increasingly weird. Make each step a complete sentence.`
       )
       
       const content = typeof response.content === 'string' 
@@ -168,7 +168,7 @@ function App() {
 
       const structuredModel = model.withStructuredOutput(schema)
       const result = await structuredModel.invoke(
-        `Write an epic, dramatic story (3-4 sentences) about completing this ridiculous task. Include unexpected plot twists, dramatic tension, and a triumphant ending. Task: "${task}" with steps: ${steps.map(step => step.text).join(', ')}. Make it feel like an adventure movie!`
+        `Write a story (3-4 sentences) about the user completing this ridiculous task. Include dramatic tension and a triumphant ending. Always praise the user for their efforts. Adress the user as 'you'. Task: "${task}" with steps: ${steps.map(step => step.text).join(', ')}. Make it feel like an adventure movie!`
       )
 
       return result.story
