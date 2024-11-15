@@ -12,12 +12,18 @@ export default defineConfig({
         global: true,
         process: true,
       },
+      overrides: {
+        fs: 'node:fs'
+      }
     }),
   ],
   base: '/anti-todo/',
-  server: {
-    host: '0.0.0.0',
-    port: 5173
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: 'globalThis'
+      }
+    }
   },
   define: {
     'process.env': {},
