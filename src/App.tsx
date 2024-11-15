@@ -135,7 +135,7 @@ function App() {
       const content = typeof response.content === 'string' 
         ? response.content 
         : Array.isArray(response.content) 
-          ? response.content.map(item => typeof item === 'string' ? item : item.text).join('')
+          ? response.content.map(item => typeof item === 'string' ? item : JSON.stringify(item)).join('')
           : ''
 
       return content.trim()
