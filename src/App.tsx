@@ -138,7 +138,7 @@ function App() {
     setTodos(todos.filter((_, i) => i !== index))
   }
 
-  const generateCompletionStory = async (task: string) => {
+  const generateCompletionStory = async (task: string, steps: Array<{ text: string; completed: boolean }>) => {
     try {
       const model = new ChatGroq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
@@ -152,7 +152,7 @@ function App() {
 
       const structuredModel = model.withStructuredOutput(schema)
       const result = await structuredModel.invoke(
-        `Write a short, funny story (2-3 sentences) about the user completing this silly task: "${task}" with the following steps: ${steps.join(', ')}`
+        `Write a short, funny story (2-3 sentences) about the user completing this silly task: "${task}" with the following steps: ${steps.map(step => step.text).join(', ')}`
       )
 
       return result.story
@@ -170,7 +170,7 @@ function App() {
     // Check if all steps are completed
     const allCompleted = todo.steps.every(step => step.completed)
     if (allCompleted && !todo.completionStory) {
-      const story = await generateCompletionStory(todo.task)
+      const story = await generateCompletionStory(todo.task, todo.steps)
       todo.completionStory = story
     } else if (!allCompleted) {
       todo.completionStory = undefined
